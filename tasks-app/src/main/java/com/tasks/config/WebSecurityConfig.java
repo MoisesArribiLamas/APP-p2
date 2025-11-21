@@ -66,18 +66,26 @@ public class WebSecurityConfig {
 
                    // permisos añadidos
                     .requestMatchers(HttpMethod.GET,  "/dashboard/").permitAll()
-                  //  .requestMatchers(HttpMethod.GET,  "/webjars/**").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/javascript-libs/**").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/css/*").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/aplication/*").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/react-libs/*").permitAll()
-                 //   .requestMatchers(HttpMethod.POST,  "/api/login").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/api/projects").permitAll()
-                 //   .requestMatchers(HttpMethod.POST,  "/api/projects").hasAnyRole("ADMIN")
-                 //   .requestMatchers(HttpMethod.DELETE,  "/api/projects/*").hasAnyRole("ADMIN")
-                 //   .requestMatchers(HttpMethod.GET,  "/api/projects/*").permitAll()
-                 //   .requestMatchers(HttpMethod.GET,  "/api/projects/*/tasks").permitAll()
-
+                    .requestMatchers(HttpMethod.GET,  "/webjars/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/javascript-libs/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/css/*").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/application/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/react-libs/*").permitAll()
+                    .requestMatchers(HttpMethod.POST,  "/api/login").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/api/projects").permitAll()
+                    .requestMatchers(HttpMethod.POST,  "/api/projects").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,  "/api/projects/*").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,  "/api/projects/*").permitAll()
+                    .requestMatchers(HttpMethod.PUT,  "/api/projects/*").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,  "/api/projects/*/tasks").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/api/users").permitAll()
+                    .requestMatchers(HttpMethod.POST,  "/api/tasks").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET,  "/api/tasks").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/api/tasks/*").permitAll()
+                    .requestMatchers(HttpMethod.POST,  "/api/tasks").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.PUT,  "/api/tasks/*").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.DELETE,  "/api/tasks/*").hasAnyRole("ADMIN")
+                    .requestMatchers(HttpMethod.POST,  "/api/tasks/**").hasAnyRole("ADMIN")
 
 
                 .anyRequest().denyAll());
