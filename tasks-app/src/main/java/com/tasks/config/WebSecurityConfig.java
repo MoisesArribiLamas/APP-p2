@@ -63,7 +63,24 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET,  "/swagger-ui.html").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/swagger-ui/*").permitAll()
                 .requestMatchers(HttpMethod.GET,  "/v3/api-docs/**").permitAll()
-                .anyRequest().permitAll());
+
+                   // permisos añadidos
+                    .requestMatchers(HttpMethod.GET,  "/dashboard/").permitAll()
+                  //  .requestMatchers(HttpMethod.GET,  "/webjars/**").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/javascript-libs/**").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/css/*").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/aplication/*").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/react-libs/*").permitAll()
+                 //   .requestMatchers(HttpMethod.POST,  "/api/login").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/api/projects").permitAll()
+                 //   .requestMatchers(HttpMethod.POST,  "/api/projects").hasAnyRole("ADMIN")
+                 //   .requestMatchers(HttpMethod.DELETE,  "/api/projects/*").hasAnyRole("ADMIN")
+                 //   .requestMatchers(HttpMethod.GET,  "/api/projects/*").permitAll()
+                 //   .requestMatchers(HttpMethod.GET,  "/api/projects/*/tasks").permitAll()
+
+
+
+                .anyRequest().denyAll());
 
         return http.build();
 
