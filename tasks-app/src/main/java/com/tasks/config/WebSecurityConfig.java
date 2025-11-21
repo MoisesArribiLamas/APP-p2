@@ -86,7 +86,7 @@ public class WebSecurityConfig {
                     .requestMatchers(HttpMethod.PUT,  "/api/tasks/*").hasAnyRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE,  "/api/tasks/*").hasAnyRole("ADMIN")
                     .requestMatchers(HttpMethod.POST,  "/api/tasks/**").hasAnyRole("ADMIN")
-
+                    .requestMatchers(HttpMethod.POST,  "/api/comments").permitAll()
 
                 .anyRequest().denyAll());
 
