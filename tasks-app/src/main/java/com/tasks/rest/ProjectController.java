@@ -86,9 +86,9 @@ public class ProjectController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> doUpdateProject(@PathVariable("id") Long id, @RequestBody ProjectDto project) 
-        throws InstanceNotFoundException, DuplicatedResourceException {        
-        Project updatedProject = projectService.update(id, project.getName(), project.getDescription());
+    public ResponseEntity<?> doUpdateProject(Principal principal, @PathVariable("id") Long id, @RequestBody ProjectDto project)
+        throws InstanceNotFoundException, DuplicatedResourceException, PermisionException {
+        Project updatedProject = projectService.update(principal.getName(), id, project.getName(), project.getDescription());
         return ResponseEntity.ok(updatedProject);
     }
 

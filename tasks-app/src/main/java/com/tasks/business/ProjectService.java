@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tasks.business.repository.ProjectsRepository;
 import com.tasks.business.repository.UsersRepository;
+
+import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.Optional;
@@ -45,13 +47,18 @@ public class ProjectService {
     }
 
     @Transactional
-    public Project update(Long projectId, String name, String description) 
-            throws DuplicatedResourceException, InstanceNotFoundException {
+    public Project update(String userName, Long projectId, String name, String description)
+            throws DuplicatedResourceException, InstanceNotFoundException, PermisionException {
         Optional<Project> project = projectsRepository.findById(projectId);
         if(!project.isPresent()) {
             throw new InstanceNotFoundException(projectId, "Project", 
                     MessageFormat.format("Project {0} does not exist", projectId));
         }
+        // comprobamos que e proyecto es de ese usuario
+        if (project.get().getAdmin().getUsername().equals(userName)){
+            throw new PermisionException();
+        }
+
         Project anotherProject = projectsRepository.findByName(name);
         if(anotherProject != null && !Objects.equals(anotherProject.getProjectId(), projectId)) {
             throw new DuplicatedResourceException("Project", name, 
