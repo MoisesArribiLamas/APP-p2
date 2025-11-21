@@ -1,6 +1,7 @@
 package com.tasks.rest;
 
 import com.tasks.business.exceptions.DuplicatedResourceException;
+import com.tasks.business.exceptions.PermisionException;
 import com.tasks.business.exceptions.InalidStateException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
 import com.tasks.rest.json.ErrorDetailsResponse;
@@ -42,5 +43,14 @@ public class ExceptionsHandler {
         ErrorDetailsResponse errorDetails = new ErrorDetailsResponse(System.currentTimeMillis(), "Duplicated Resource", 
         ex.getMessage(), null, request.getContextPath(), 404);
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PermisionException.class)
+    public final ResponseEntity<ErrorDetailsResponse> handlePermisionException(
+            PermisionException ex, WebRequest request) {
+        logger.warn(ex.getMessage(), ex);
+        ErrorDetailsResponse errorDetails = new ErrorDetailsResponse(System.currentTimeMillis(), "Operation not permitted",
+                ex.getMessage(), null, request.getContextPath(), 403);
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 }

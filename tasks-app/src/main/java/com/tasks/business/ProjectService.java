@@ -4,6 +4,7 @@ import com.tasks.business.entities.Project;
 import com.tasks.business.entities.User;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
+import com.tasks.business.exceptions.PermisionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tasks.business.repository.ProjectsRepository;
@@ -63,11 +64,17 @@ public class ProjectService {
     }
     
     @Transactional()
-    public void removeById(Long id) throws InstanceNotFoundException {
+    public void removeById(String userName, Long id) throws InstanceNotFoundException, PermisionException {
         Optional<Project> project = projectsRepository.findById(id);
         if(!project.isPresent()) {
             throw new InstanceNotFoundException(id, "Project" , MessageFormat.format("Project {0} does not exist", id));
         }
+
+        // comprobamos que e proyecto es de ese usuario
+        if (project.get().getAdmin().getUsername().equals(userName)){
+            throw new PermisionException();
+        }
+
         projectsRepository.delete(project.get());
     }
     

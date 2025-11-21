@@ -6,6 +6,7 @@ import com.tasks.business.entities.Project;
 import com.tasks.business.entities.Task;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
+import com.tasks.business.exceptions.PermisionException;
 import com.tasks.rest.dto.ProjectDto;
 import com.tasks.rest.json.ErrorDetailsResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,8 +100,9 @@ public class ProjectController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> doRemoveProjectById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        projectService.removeById(id);
+    public ResponseEntity<?> doRemoveProjectById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException, PermisionException {
+
+        projectService.removeById(principal.getName(), id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
