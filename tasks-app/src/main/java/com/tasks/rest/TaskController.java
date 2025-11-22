@@ -6,6 +6,7 @@ import com.tasks.business.entities.*;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InalidStateException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
+import com.tasks.business.exceptions.PermisionException;
 import com.tasks.rest.dto.CommentDto;
 import com.tasks.rest.dto.TaskDto;
 import java.net.URI;
@@ -90,9 +91,9 @@ public class TaskController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> doUpdateTask(@PathVariable("id") Long id, @RequestBody TaskDto task) 
-        throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException {        
-        Task updatedTask = tasksService.update(id, task.getName(), task.getDescription(),
+    public ResponseEntity<?> doUpdateTask(Principal principal, @PathVariable("id") Long id, @RequestBody TaskDto task)
+        throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException, PermisionException {
+        Task updatedTask = tasksService.update(principal.getName(), id, task.getName(), task.getDescription(),
             task.getType(), task.getOwner(), task.getProject());
         return ResponseEntity.ok(updatedTask);
     }
@@ -105,8 +106,8 @@ public class TaskController {
                 schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> doRemoveTaskById(@PathVariable("id") Long id) throws InstanceNotFoundException {
-        tasksService.removeById(id);
+    public ResponseEntity<?> doRemoveTaskById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException, PermisionException {
+        tasksService.removeById(principal.getName(), id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -148,10 +149,10 @@ public class TaskController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeProgress", method = RequestMethod.POST)
-    public ResponseEntity<?> doChangeTaskProgress(@PathVariable("id") Long id,
+    public ResponseEntity<?> doChangeTaskProgress(Principal principal, @PathVariable("id") Long id,
                                                   @RequestBody(required = true) TextNode progress) 
-        throws InstanceNotFoundException, InalidStateException {        
-        Task task = tasksService.changeProgress(id, (byte) progress.asInt());
+        throws InstanceNotFoundException, InalidStateException, PermisionException {
+        Task task = tasksService.changeProgress(principal.getName(), id, (byte) progress.asInt());
         return ResponseEntity.ok(task);
     }
 

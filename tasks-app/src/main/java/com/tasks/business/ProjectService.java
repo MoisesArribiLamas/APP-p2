@@ -55,7 +55,7 @@ public class ProjectService {
                     MessageFormat.format("Project {0} does not exist", projectId));
         }
         // comprobamos que e proyecto es de ese usuario
-        if (project.get().getAdmin().getUsername().equals(userName)){
+        if (!(project.get().getAdmin().getUsername().equals(userName))){
             throw new PermisionException();
         }
 
@@ -78,7 +78,7 @@ public class ProjectService {
         }
 
         // comprobamos que e proyecto es de ese usuario
-        if (project.get().getAdmin().getUsername().equals(userName)){
+        if (!(project.get().getAdmin().getUsername().equals(userName))){
             throw new PermisionException();
         }
 

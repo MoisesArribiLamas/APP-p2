@@ -10,6 +10,7 @@ import com.tasks.business.entities.User;
 import com.tasks.business.exceptions.DuplicatedResourceException;
 import com.tasks.business.exceptions.InalidStateException;
 import com.tasks.business.exceptions.InstanceNotFoundException;
+import com.tasks.business.exceptions.PermisionException;
 import com.tasks.business.repository.CommentsRepository;
 import com.tasks.business.repository.ProjectsRepository;
 import com.tasks.business.repository.TasksRepository;
@@ -72,8 +73,8 @@ public class TasksService {
     }
     
     @Transactional
-    public Task update(Long id, String name, String description, String type, String username, Long projectId) 
-        throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException {
+    public Task update(String userName, Long id, String name, String description, String type, String username, Long projectId)
+            throws InstanceNotFoundException, InalidStateException, DuplicatedResourceException, PermisionException {
         Optional<User> user = userRepository.findById(username);
         if(!user.isPresent()) {
             throw new UsernameNotFoundException(MessageFormat.format("User {0} does not exist", username));
@@ -83,6 +84,12 @@ public class TasksService {
             throw new InstanceNotFoundException(projectId, "Project", 
                     MessageFormat.format("Project {0} does not exist", projectId));
         }
+        // comprobamos que e proyecto es de ese usuario
+        if (!(project.get().getAdmin().getUsername().equals(userName))){
+            throw new PermisionException();
+        }
+
+
         Optional<Task> task = tasksRepository.findById(id);
         if(!task.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
@@ -130,13 +137,20 @@ public class TasksService {
     }
     
     @Transactional
-    public Task changeProgress(Long id, byte progress) 
-            throws InstanceNotFoundException, InalidStateException {
+    public Task changeProgress(String userName, Long id, byte progress)
+            throws InstanceNotFoundException, InalidStateException, PermisionException {
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
+
         Task task = optTask.get();
+
+        // comprobamos que e proyecto es de ese usuario
+        if (task.getOwner().getUsername().equals(userName)){
+            throw new PermisionException();
+        }
+
         if(task.getState().equals(TaskState.CLOSED)) {
             throw new InalidStateException("Task " + task.getName() + " is closed.");
         }
@@ -193,12 +207,17 @@ public class TasksService {
     }
 
     @Transactional()
-    public void removeById(Long id) throws InstanceNotFoundException {
+    public void removeById(String userName, Long id) throws InstanceNotFoundException, PermisionException {
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
         Project project = optTask.get().getProject();
+        // comprobamos que e proyecto es de ese usuario
+        if (!(project.getAdmin().getUsername().equals(userName))){
+            throw new PermisionException();
+        }
+
         project.setTasksCount(project.getTasksCount() - 1);
         tasksRepository.delete(optTask.get());
     }
