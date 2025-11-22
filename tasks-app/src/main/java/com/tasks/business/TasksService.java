@@ -122,13 +122,19 @@ public class TasksService {
     }    
 
     @Transactional
-    public Task changeResolution(Long id, TaskResolution resolution) 
-            throws InstanceNotFoundException, InalidStateException {
+    public Task changeResolution(String userName, Long id, TaskResolution resolution)
+            throws InstanceNotFoundException, InalidStateException, PermisionException {
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
         Task task = optTask.get();
+
+        // comprobamos que la tarea es de ese usuario
+        if (!(task.getOwner().getUsername().equals(userName))){
+            throw new PermisionException();
+        }
+
         if(task.getState().equals(TaskState.CLOSED)) {
             throw new InalidStateException("Task " + task.getName() + " is closed.");
         }
@@ -146,8 +152,8 @@ public class TasksService {
 
         Task task = optTask.get();
 
-        // comprobamos que e proyecto es de ese usuario
-        if (task.getOwner().getUsername().equals(userName)){
+        // comprobamos que la tarea es de ese usuario
+        if (!(task.getOwner().getUsername().equals(userName))){
             throw new PermisionException();
         }
 

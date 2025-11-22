@@ -134,10 +134,10 @@ public class TaskController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeResolution", method = RequestMethod.POST)
-    public ResponseEntity<?> doChangeTaskResolution(@PathVariable("id") Long id,
-                                                    @RequestBody(required = true) TextNode resolution) 
-        throws InstanceNotFoundException, InalidStateException {        
-        Task task = tasksService.changeResolution(id, TaskResolution.valueOf(resolution.asText()));
+    public ResponseEntity<?> doChangeTaskResolution(Principal principal, @PathVariable("id") Long id,
+                                                    @RequestBody(required = true) TextNode resolution)
+            throws InstanceNotFoundException, InalidStateException, PermisionException {
+        Task task = tasksService.changeResolution(principal.getName(), id, TaskResolution.valueOf(resolution.asText()));
         return ResponseEntity.ok(task);
     }
 
