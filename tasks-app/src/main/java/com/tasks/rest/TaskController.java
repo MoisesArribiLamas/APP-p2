@@ -72,9 +72,9 @@ public class TaskController {
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks", method = RequestMethod.POST)
-    public ResponseEntity<?> doCreateTask(@RequestBody TaskDto task) 
-            throws DuplicatedResourceException, InstanceNotFoundException {
-        Task newTask = tasksService.create(task.getName(), task.getDescription(),
+    public ResponseEntity<?> doCreateTask(Principal principal, @RequestBody TaskDto task)
+            throws DuplicatedResourceException, InstanceNotFoundException, PermisionException {
+        Task newTask = tasksService.create(principal.getName(), task.getName(), task.getDescription(),
                 task.getType(), task.getOwner(), task.getProject());
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(newTask.getTaskId()).toUri();

@@ -95,9 +95,13 @@ public class ProjectController {
     @Operation(summary = "Remove project by id", security = {@SecurityRequirement(name = "Bearer")})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Successfully removed the project"),
+
         @ApiResponse(responseCode = "404", description = "The project does not exist",
             content = {@Content(mediaType = "application/json",
-                schema = @Schema(implementation = ErrorDetailsResponse.class))})
+                schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> doRemoveProjectById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException, PermisionException {
@@ -110,6 +114,7 @@ public class ProjectController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of project tasks",
             content = {@Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Task.class)))}),
+
         @ApiResponse(responseCode = "404", description = "The project does not exist",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })    

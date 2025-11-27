@@ -39,8 +39,8 @@ public class TasksService {
     private ProjectsRepository projectsRepository;
     
     @Transactional
-    public Task create(String name, String description, String type, String username, Long projectId) 
-            throws DuplicatedResourceException, InstanceNotFoundException {
+    public Task create(String userName, String name, String description, String type, String username, Long projectId)
+            throws DuplicatedResourceException, InstanceNotFoundException, PermisionException {
         Optional<User> user = userRepository.findById(username);
         if(!user.isPresent()) {
             throw new UsernameNotFoundException(MessageFormat.format("User {0} does not exist", username));
@@ -54,7 +54,13 @@ public class TasksService {
             throw new DuplicatedResourceException("Task", name, 
                 MessageFormat.format("Task ''{0}'' already exists", name));
         }
-        
+
+        // comprobamos que el proyecto es de ese admin
+        if (!(project.get().getAdmin().getUsername().equals(userName))){
+            throw new PermisionException();
+        }
+
+
         Project projectToUpdate = project.get();
         projectToUpdate.setTasksCount(projectToUpdate.getTasksCount() + 1);
         projectsRepository.save(projectToUpdate);
