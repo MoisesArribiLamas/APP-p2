@@ -88,7 +88,10 @@ public class TaskController {
                 schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "The task or project does not exist or there is a task with the same name or the task is closed",
             content = {@Content(mediaType = "application/json",
-                schema = @Schema(implementation = ErrorDetailsResponse.class))})
+                schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> doUpdateTask(Principal principal, @PathVariable("id") Long id, @RequestBody TaskDto task)
@@ -103,7 +106,10 @@ public class TaskController {
         @ApiResponse(responseCode = "204", description = "Successfully removed the task"),
         @ApiResponse(responseCode = "404", description = "The task does not exist",
             content = {@Content(mediaType = "application/json",
-                schema = @Schema(implementation = ErrorDetailsResponse.class))})
+                schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> doRemoveTaskById(Principal principal, @PathVariable("id") Long id) throws InstanceNotFoundException, PermisionException {
@@ -131,7 +137,9 @@ public class TaskController {
         @ApiResponse(responseCode = "200", description = "Successfully changed the task resolution",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "The task does not exist or is closed",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeResolution", method = RequestMethod.POST)
     public ResponseEntity<?> doChangeTaskResolution(Principal principal, @PathVariable("id") Long id,

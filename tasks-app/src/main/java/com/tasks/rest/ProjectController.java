@@ -83,7 +83,10 @@ public class ProjectController {
                 schema = @Schema(implementation = Project.class))}),
         @ApiResponse(responseCode = "404", description = "The project does not exist or there is one with the same name",
             content = {@Content(mediaType = "application/json",
-                schema = @Schema(implementation = ErrorDetailsResponse.class))})
+                schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> doUpdateProject(Principal principal, @PathVariable("id") Long id, @RequestBody ProjectDto project)

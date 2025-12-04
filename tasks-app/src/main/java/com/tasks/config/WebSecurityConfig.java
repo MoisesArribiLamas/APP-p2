@@ -65,7 +65,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET,  "/v3/api-docs/**").permitAll()
 
                    // permisos añadidos
-                    .requestMatchers(HttpMethod.GET,  "/dashboard/").permitAll()
+                    .requestMatchers(HttpMethod.GET,  "/dashboard/**").permitAll()
                     .requestMatchers(HttpMethod.GET,  "/webjars/**").permitAll()
                     .requestMatchers(HttpMethod.GET,  "/javascript-libs/**").permitAll()
                     .requestMatchers(HttpMethod.GET,  "/css/*").permitAll()

@@ -30,19 +30,38 @@ var Login = (props) => {
         // FIXME.
         // Set the application URI the authorization server must redirect to after the user authenticates in the
         // authorization server authentication form.
-        const redirectUri = '';
+
+        // URI de redirección después de autenticación
+        const redirectUri = 'http://127.0.0.1:8888/tasks-service/dashboard/loginOAuth';
+
+        // Generar PKCE code verifier y challenge
         const codeVerifier = pkceUtils.generateRandomString();
         const codeChallenge = await pkceUtils.getChallenge(codeVerifier);
 
         // FIXME.
-        // Store codeVerifier in sessionStorage.
+        // Store codeVerifier in sessionStorage.sessionstorage,setitem
+
+        // Guardar codeVerifier en sessionStorage
+        sessionStorage.setItem('pkce_code_verifier', codeVerifier);
 
         // FIXME
         // Make the browser to go to the authorization server authentication form.
         // Remember to add all necessary parameters in the URL.
-        window.location.replace('');
+
+        // Construir la URL de autorización
+        const authUrl = 'http://127.0.0.1:7777/oauth2/authorize?' +
+                'response_type=code&' +
+                'client_id=tasks_app&' +
+                'redirect_uri=http://127.0.0.1:8888/tasks-service/dashboard/loginOAuth&' +
+                'scope=openid&' +
+                'code_challenge=SsgNPtj8fUfX4GjF-ZVtv4TrT3cyJma5KWnczaxw6Fk&' +
+                'code_challenge_method=S256';
+
+            // Redirigir al servidor de autorización
+            window.location.replace(authUrl);
 
     };
+
     return (
         <div className="row w-100">
             <div className="col">
