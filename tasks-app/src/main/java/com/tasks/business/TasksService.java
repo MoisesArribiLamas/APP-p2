@@ -174,12 +174,19 @@ public class TasksService {
     }
     
     @Transactional
-    public Task changeState(Long id, TaskState state)  throws InstanceNotFoundException {
+    public Task changeState(String userName, Long id, TaskState state) throws InstanceNotFoundException, PermisionException {
         
         Optional<Task> optTask = tasksRepository.findById(id);
         if(!optTask.isPresent()) {
             throw new InstanceNotFoundException(id, "Task" , MessageFormat.format("Task {0} does not exist", id));
         }
+
+        Project project = optTask.get().getProject();
+        // comprobamos que el proyecto es de ese admin
+        if (!(project.getAdmin().getUsername().equals(userName))){
+            throw new PermisionException();
+        }
+
         Task task = optTask.get();
         task.setState(state);
         return tasksRepository.save(task);

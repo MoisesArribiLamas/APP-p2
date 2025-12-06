@@ -122,13 +122,15 @@ public class TaskController {
         @ApiResponse(responseCode = "200", description = "Successfully changed the task state",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "The task does not exist",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeState", method = RequestMethod.POST)
-    public ResponseEntity<?> doChangeTaskState(@PathVariable("id") Long id,
-                                         @RequestBody(required = true) TextNode state) 
-        throws InstanceNotFoundException {        
-        Task task = tasksService.changeState(id, TaskState.valueOf(state.asText()));
+    public ResponseEntity<?> doChangeTaskState(Principal principal, @PathVariable("id") Long id,
+                                         @RequestBody(required = true) TextNode state)
+            throws InstanceNotFoundException, PermisionException {
+        Task task = tasksService.changeState(principal.getName(), id, TaskState.valueOf(state.asText()));
         return ResponseEntity.ok(task);
     }
 
@@ -154,7 +156,9 @@ public class TaskController {
         @ApiResponse(responseCode = "200", description = "Successfully changed the task progress",
             content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Task.class))}),
         @ApiResponse(responseCode = "404", description = "The task does not exist, is closed or is not in progress",
-            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
+            content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))}),
+            @ApiResponse(responseCode = "403", description = "Operation not permitted",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ErrorDetailsResponse.class))})
     })
     @RequestMapping(value = "/tasks/{id}/changeProgress", method = RequestMethod.POST)
     public ResponseEntity<?> doChangeTaskProgress(Principal principal, @PathVariable("id") Long id,
